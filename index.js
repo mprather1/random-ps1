@@ -5,6 +5,7 @@ const ROOT_DIR = process.env['ROOT_DIR']
 const HOME_DIR = process.env['HOME_DIR']
 
 var bashrc = path.join(HOME_DIR, '.bashrc')
+var defaultRC = path.join('/etc', 'skel', '.bashrc')
 var bashrcTxt = path.join(ROOT_DIR, 'bashrc.txt')
 
 var colors = {
@@ -25,7 +26,7 @@ var colors = {
 
 var ps1Line = Buffer.from(`\nPS1="\${debian_chroot:($debian_chroot)}${randomColor()}\\u${randomColor()}@${randomColor()}\\h\\n${randomColor()}\\w${randomColor()}\\$(parse_git_branch)${randomColor()} >${randomColor()}>${randomColor()}>\\[\\033[00;37m\\] "\n`)
 
-bashrcConfig(bashrc, ps1Line)
+bashrcConfig(defaultRC, ps1Line)
 
 function bashrcConfig (file) {
   fs.readFile(file, function (err, data) {
