@@ -1,13 +1,6 @@
 var fs = require('fs')
 var path = require('path')
 
-const ROOT_DIR = process.env['ROOT_DIR']
-const HOME_DIR = process.env['HOME_DIR']
-
-var bashrc = path.join(HOME_DIR, '.bashrc')
-var defaultRC = path.join('/etc', 'skel', '.bashrc')
-var bashrcTxt = path.join(ROOT_DIR, 'bashrc.txt')
-
 var colors = {
   grey: '\\[\\033[01;30m\\]',
   light_blue: '\\[\\033[01;34m\\]',
@@ -26,26 +19,33 @@ var colors = {
 
 var ps1Line = Buffer.from(`\nPS1="\${debian_chroot:($debian_chroot)}${randomColor()}\\u${randomColor()}@${randomColor()}\\h\\n${randomColor()}\\w${randomColor()}\\$(parse_git_branch)${randomColor()} >${randomColor()}>${randomColor()}>\\[\\033[00;37m\\] "\n`)
 
-bashrcConfig(defaultRC, ps1Line)
+export default function bashrcConfig (file, options) {
+  const PWD = options.PWD
+  const HOME = options.HOME
+  var bashrc = path.join(HOME, '.bashrc')
+  var bashrcTxt = path.join(PWD, 'src', 'random-ps1', 'bashrc.txt')
 
-function bashrcConfig (file) {
+  const { logger } = options
+
   fs.readFile(file, function (err, data) {
     if (err) console.log(err)
 
-    readTxt(data)
+    readTxt(data, bashrcTxt, bashrc, logger)
   })
 }
 
-function readTxt (bashrcBuff) {
-  fs.readFile(bashrcTxt, function (err, data) {
-    if (err) console.log(err)
-
-    writeFile(bashrcBuff, data)
+function readTxt (bashrcBuff, txt, bashrc, logger) {
+  fs.readFile(txt, function (err, data) {
+    if (err) {
+      logger.error(err)
+    }
+    writeFile(bashrcBuff, data, bashrc, logger)
   })
 }
 
-function writeFile (bufA, bufB) {
+function writeFile (bufA, bufB, bashrc, logger) {
   const retval = Buffer.concat([bufA, bufB, ps1Line])
+  logger.info(`writing to ${bashrc}`)
   fs.writeFile(bashrc, retval)
 }
 

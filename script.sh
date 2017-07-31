@@ -1,1 +1,1 @@
-  ROOT_DIR=. HOME_DIR=$HOME node index.js
+HOME=$HOME node index.js $(pwd) $1
