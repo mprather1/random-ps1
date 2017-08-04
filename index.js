@@ -2,7 +2,7 @@ var fs = require('fs')
 var path = require('path')
 const PWD = process.argv[2]
 const HOME = process.env['HOME']
-const logger = require("winston-color")
+const logger = require('winston-color')
 var defaultRC = path.join('/etc', 'skel', '.bashrc')
 var bashrc = path.join(HOME, '.bashrc')
 var bashrcTxt = path.join(PWD, 'bashrc.txt')
@@ -25,12 +25,11 @@ var colors = {
 
 var ps1Line = Buffer.from(`\nPS1="\${debian_chroot:($debian_chroot)}${randomColor()}\\u${randomColor()}@${randomColor()}\\h\\n${randomColor()}\\w${randomColor()}\\$(parse_git_branch)${randomColor()} >${randomColor()}>${randomColor()}>\\[\\033[00;37m\\] "\n`)
 
-
 fs.readFile(defaultRC, function (err, data) {
   if (err) {
     logger.error(err)
   }
-  
+
   readTxt(data, bashrcTxt, bashrc, logger)
 })
 

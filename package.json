@@ -1,6 +1,9 @@
 {
   "name": "random-ps1",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "winston-color": "^1.0.0"
+  }
 }
