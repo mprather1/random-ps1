@@ -23,7 +23,7 @@ var colors = {
   yellow: '\\[\\033[01;33m\\]'
 }
 
-var ps1Line = Buffer.from(`\nPS1="\${debian_chroot:($debian_chroot)}${randomColor()}\\u${randomColor()}@${randomColor()}\\h\\n${randomColor()}\\w${randomColor()}\\$(parse_git_branch)${randomColor()} >${randomColor()}>${randomColor()}>\\[\\033[00;37m\\] "\n`)
+var ps1Line = Buffer.from(`\nPS1="\${debian_chroot:($debian_chroot)}${randomColor()}\\u${randomColor()}@${randomColor()}\\H\\n${randomColor()}\\w${randomColor()}\\$(parse_git_branch)${randomColor()} >${randomColor()}>${randomColor()}>\\[\\033[00;37m\\] "\n`)
 
 fs.readFile(defaultRC, function (err, data) {
   if (err) {
