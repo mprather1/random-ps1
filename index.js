@@ -1,13 +1,17 @@
-var fs = require('fs')
-var path = require('path')
-const PWD = process.argv[2]
-const HOME = process.env['HOME']
-const logger = require('winston-color')
-var defaultRC = path.join('/etc', 'skel', '.bashrc')
-var bashrc = path.join(HOME, '.bashrc')
-var bashrcTxt = path.join(PWD, 'bashrc.txt')
+const fs = require('fs')
+const path = require('path')
+const { promisify } = require("util")
+const winston = require('winston')
+const os = require("os")
 
-var colors = {
+const HOME = os.homedir()
+const PWD = process.cwd()
+const DEFAULT = path.join('/etc', 'skel', '.bashrc')
+const NEW = path.join(PWD, 'bashrc.txt')
+const LOCATION = path.join(HOME, '.bashrc')
+const PKG = require(path.join(PWD, 'package.json'))
+
+const colors = {
   grey: '\\[\\033[01;30m\\]',
   light_blue: '\\[\\033[01;34m\\]',
   blue: '\\[\\033[00;34m\\]',
@@ -25,32 +29,40 @@ var colors = {
 
 var ps1Line = Buffer.from(`\nPS1="\${debian_chroot:($debian_chroot)}${randomColor()}\\u${randomColor()}@${randomColor()}\\H\\n${randomColor()}\\w${randomColor()}\\$(parse_git_branch)${randomColor()} >${randomColor()}>${randomColor()}>\\[\\033[00;37m\\] "\n`)
 
-fs.readFile(defaultRC, function (err, data) {
-  if (err) {
-    logger.error(err)
-  }
+const logger = winston.createLogger({
+  transports: [
+    new winston.transports.Console()
+  ],
 
-  readTxt(data, bashrcTxt, bashrc, logger)
+  format: winston.format.combine(
+    winston.format.colorize(),
+    winston.format.simple()
+  )
 })
 
-function readTxt (bashrcBuff, txt, bashrc, logger) {
-  fs.readFile(txt, function (err, data) {
-    if (err) {
-      logger.error(err)
-    }
-    writeFile(bashrcBuff, data, bashrc, logger)
-  })
-}
+const readFile = promisify(fs.readFile)
+const writeFile = promisify(fs.writeFile)
 
-function writeFile (bufA, bufB, bashrc, logger) {
-  const retval = Buffer.concat([bufA, bufB, ps1Line])
-  logger.info(`writing to ${bashrc}`)
-  fs.writeFile(bashrc, retval)
+initialize()
+
+async function initialize () {
+  try {
+    const buffA = await readFile(DEFAULT)
+    const buffB = await readFile(NEW)
+    const retval = Buffer.concat([buffA, buffB, ps1Line])
+
+    logger.info(`writing to ${LOCATION}`)
+    await writeFile(LOCATION, retval)
+    logger.info(`${PKG.name} - success...`)
+  } catch (err) {
+    logger.error(err)
+  }
 }
 
 function randomColor () {
   var result
   var count = 0
+
   for (var prop in colors) {
     if (Math.random() < 1 / ++count) {
       result = prop
