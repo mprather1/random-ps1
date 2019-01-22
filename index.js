@@ -9,7 +9,6 @@ const PWD = process.cwd()
 const DEFAULT = path.join('/etc', 'skel', '.bashrc')
 const NEW = path.join(PWD, 'bashrc.txt')
 const LOCATION = path.join(HOME, '.bashrc')
-const PKG = require(path.join(PWD, 'package.json'))
 
 const colors = {
   grey: '\\[\\033[01;30m\\]',
@@ -53,7 +52,6 @@ async function initialize () {
 
     logger.info(`writing to ${LOCATION}`)
     await writeFile(LOCATION, retval)
-    logger.info(`${PKG.name} - success...`)
   } catch (err) {
     logger.error(err)
   }
