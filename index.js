@@ -1,7 +1,9 @@
+#!/usr/bin/env node
+
 const fs = require('fs')
 const path = require('path')
 const { promisify } = require("util")
-const winston = require('winston')
+const Shlogger = require("shlogger")
 const os = require("os")
 
 const HOME = os.homedir()
@@ -28,16 +30,7 @@ const colors = {
 
 var ps1Line = Buffer.from(`\nPS1="\${debian_chroot:($debian_chroot)}${randomColor()}\\u${randomColor()}@${randomColor()}\\H\\n${randomColor()}\\w${randomColor()}\\$(parse_git_branch)${randomColor()} >${randomColor()}>${randomColor()}>\\[\\033[00;37m\\] "\n`)
 
-const logger = winston.createLogger({
-  transports: [
-    new winston.transports.Console()
-  ],
-
-  format: winston.format.combine(
-    winston.format.colorize(),
-    winston.format.simple()
-  )
-})
+const logger = new Shlogger()
 
 const readFile = promisify(fs.readFile)
 const writeFile = promisify(fs.writeFile)
