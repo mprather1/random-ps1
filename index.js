@@ -28,7 +28,7 @@ const colors = {
   yellow: '\\[\\033[01;33m\\]'
 }
 
-var ps1Line = Buffer.from(`\nPS1="\${debian_chroot:($debian_chroot)}${randomColor()}\\u${randomColor()}@${randomColor()}\\H\\n${randomColor()}\\w${randomColor()}\\$(parse_git_branch)${randomColor()} >${randomColor()}>${randomColor()}>\\[\\033[00;37m\\] "\n`)
+var ps1Line = Buffer.from(`\nPS1="\\[\\033]0;\\u@\\H: \\w\\007\\]\${debian_chroot:($debian_chroot)}${randomColor()}\\u${randomColor()}@${randomColor()}\\H\\n${randomColor()}\\w${randomColor()}\\$(parse_git_branch)${randomColor()} >${randomColor()}>${randomColor()}>\\[\\033[00;37m\\] "\n`)
 
 const logger = new Shlogger()
 
